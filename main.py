@@ -44,6 +44,6 @@ def remove_product(id:int):
 def update_product(id:int , product:Products):
     for i in range(len(products)):
             if products[i].id == id:
-                products[i] = product
-                return {"updated product":products}
-    return "product not found"
+                products[i] = product 
+                return {"updated product":product}
+    return {"product not found"}
