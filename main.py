@@ -30,7 +30,9 @@ def add_product(product:Products):
     products.append(product)
 
 @app.put("/product")
-def update_product()
+def update_product(id:int , product:Products):
+    
+
     
 @app.post("/remove/{id}")
 def remove_product(id:int):
