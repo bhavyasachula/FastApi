@@ -28,8 +28,10 @@ def get_product_by_id(id:int):
 @app.post("/product")
 def add_product(product:Products):
     products.append(product)
+
 @app.put("/product")
 def update_product()
+    
 @app.post("/remove/{id}")
 def remove_product(id:int):
     for product in products:
