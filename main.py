@@ -29,9 +29,6 @@ def get_product_by_id(id:int):
 def add_product(product:Products):
     products.append(product)
 
-@app.put("/product")
-def update_product(id:int , product:Products):
-    
 
     
 @app.post("/remove/{id}")
@@ -42,3 +39,8 @@ def remove_product(id:int):
         return {"removed_product":product}
         
     return "product is not present"
+
+@app.put("/product")
+def update_product(id:int , product:Products):
+    for i in range(len(products)):
+            print(products[i].id)
