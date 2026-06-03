@@ -33,12 +33,12 @@ def add_product(product:Products):
     
 @app.delete("/delete/{id}")
 def remove_product(id:int):
-    for product in products:
-      if product.id == id:
-        products.remove(product)
-        return {"removed_product":product}
+    for i in range(products):
+      if products[i].id == id:
+        del products[i]
+        return {"removed_product"}
         
-    return "product is not present"
+    return "product is not found"
 
 @app.put("/product")
 def update_product(id:int , product:Products):
