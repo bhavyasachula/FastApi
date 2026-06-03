@@ -31,7 +31,7 @@ def add_product(product:Products):
 
 
     
-@app.post("/remove/{id}")
+@app.delete("/delete/{id}")
 def remove_product(id:int):
     for product in products:
       if product.id == id:
