@@ -43,4 +43,7 @@ def remove_product(id:int):
 @app.put("/product")
 def update_product(id:int , product:Products):
     for i in range(len(products)):
-            print(products[i].id)
+            if products[i].id == id:
+                products[i] = product
+                return {"updated product":products}
+    return "product not found"
