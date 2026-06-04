@@ -104,7 +104,6 @@ def add_product(product:Products,db:Session = Depends(get_db)):
 def update_product(id:int , product:Products,db:Session = Depends(get_db)):
     db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
     if db_product:
-        
         db_product.name = product.name
         db_product.description = product.description
         db_product.price = product.price
@@ -116,8 +115,10 @@ def update_product(id:int , product:Products,db:Session = Depends(get_db)):
 
     
 @app.delete("/product/{id}")
-def remove_product(id:int):
-    db_product = db.query()
+def remove_product(id:int,db:Session = Depends(get_db)):
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    if db_product:
+        db.delete(db_product)
         
     return "product is not found"
 
