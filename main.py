@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from models import Products
-from db import session
+from db import session,engine
+import database_models  
+
 app = FastAPI()
 
 
@@ -14,6 +16,7 @@ products= [
     Products(id=8,name="mouse",description="A mouse",price=99,quantity=10),
     Products(id=6,name="bag",description="A bag",price=99,quantity=10)
 ]
+database_models.Base.metadata.create_all(bind=engine)
 @app.get("/products")
 def getallproducts():
     #database connection 
