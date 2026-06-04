@@ -96,24 +96,28 @@ def get_product_by_id(id:int,db:Session= Depends(get_db)):
 
 @app.post("/product")
 def add_product(product:Products,db:Session = Depends(get_db)):
-    db.add(database_models.Product(**product.model_dump))
+    db.add(database_models.Product(**product.model_dump()))
+    db.commit()
     return product
 
+@app.put("/product")
+def update_product(id:int , product:Products,db:Session = Depends(get_db)):
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    if db_product:
+        
+        db_product.name = product.name
+        db_product.description = product.description
+        db_product.price = product.price
+        db_product.quantity = product.quantity
+        db.commit()
+        return "Product updated successfully"
+    else:
+        return {"product not found"}
 
     
 @app.delete("/product/{id}")
 def remove_product(id:int):
-    for i in range(len(products)):
-      if products[i].id == id:
-        del products[i]
-        return {"removed the product"}
+    db_product = db.query()
         
     return "product is not found"
 
-@app.put("/product")
-def update_product(id:int , product:Products):
-    for i in range(len(products)):
-            if products[i].id == id:
-                products[i] = product 
-                return {"updated product":product}
-    return {"product not found"}
