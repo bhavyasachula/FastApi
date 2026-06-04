@@ -119,6 +119,6 @@ def remove_product(id:int,db:Session = Depends(get_db)):
     db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
     if db_product:
         db.delete(db_product)
-        
+        db.commit()
     return "product is not found"
 
