@@ -89,7 +89,7 @@ def get_product_by_id(id:int,db:Session= Depends(get_db)):
                                # SELECT * FROM PRODUCT WHERE ID = 1
                                #                  this id is of product table as product.id 
                                #                                                  and this first means Fetch me the first relevant id
-    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first() 
+    db_product = db.query(database_models.Product).order_by(database_models.Product.id).filter(database_models.Product.id == id).first() 
     if db_product:
         return db_product
     return {"message":"product not found"}
