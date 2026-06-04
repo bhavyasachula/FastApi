@@ -29,6 +29,7 @@ products= [
     Products(id=6,name="bag",description="A bag",price=99,quantity=10)
 ]
 
+#Look all the models which inherits from the base class and register its schema with its metadata and create table in the database using the (engine)  connection string of the database (create_all)
 database_models.Base.metadata.create_all(bind=engine)
 
 def init_db():
