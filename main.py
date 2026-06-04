@@ -82,21 +82,22 @@ def get_product_by_id(id:int,db:Session= Depends(get_db)):
     #filter is used as where clause in this
                         #table name/model that convert after
                             #  |                        
-                            #  v                            WHERE Id == the id comes when 
-                            #                                   the user passes any id
-                               #                                id of the product table
-                               # so the query becomes
-                               # SELECT * FROM PRODUCT WHERE ID = 1
-                               #                  this id is of product table as product.id 
-                               #                                                  and this first means Fetch me the first relevant id
+                            #  |                            WHERE Id == the id comes when 
+                            #  |                                 the user passes any id
+                            #  |                              id of the product table
+                            #  |                         so the query becomes
+                            #  |                        SELECT * FROM PRODUCT WHERE ID = 1
+                            #  |                      this id is of product table as product.id 
+                            #  v                                               and this first means Fetch me the first relevant id
     db_product = db.query(database_models.Product).order_by(database_models.Product.id).filter(database_models.Product.id == id).first() 
     if db_product:
         return db_product
     return {"message":"product not found"}
 
 @app.post("/product")
-def add_product(product:Products):
-    products.append(product)
+def add_product(product:Products,db:Session = Depends(get_db)):
+    db.add(database_models.Product(**product.model_dump))
+    return product
 
 
     
