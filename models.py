@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-@dataclass
-class Products():
+from pydantic import BaseModel
+
+class Products(BaseModel):
     id:int
     name:str
     description:str

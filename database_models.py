@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class Products(Base):
+class Product(Base):
     # To name the table by sqlalchemy
     __tablename__ = "product"
     # using column to identify by the sqlalchemy
