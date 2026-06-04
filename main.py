@@ -1,7 +1,8 @@
-from fastapi import FastAPI
+from fastapi import Depends,FastAPI
 from models import Products
 from db_conn import session,engine
 import database_models  
+from sqlalchemy.orm import Session
 
 app = FastAPI()
 
@@ -32,27 +33,65 @@ products= [
 #Look all the models which inherits from the base class and register its schema with its metadata and create table in the database using the (engine)  connection string of the database (create_all)
 database_models.Base.metadata.create_all(bind=engine)
 
+def get_db():
+    db = session()
+    try:
+       yield db
+       #Internally fast api does this init_db(db) is passes the db object and after the execution is completed it comes here and execute the finally and close the connection of db
+    finally:
+        db.close()
+
+
 def init_db():
     db=session()
-    for product in products:
+    count = db.query(database_models.Product).count()
+    
+    if count==0:
+        for product in products:
         # print(product.model_dump())
-        db.add(database_models.Product(**product.model_dump()))
-        
+        # class Products(BaseModel):
+        # id:int
+        # name:str
+        # description:str
+        # price:float
+        # quantity:int
+        # wht we are doing is import the Product object from the databse_models.Products(id=,name=,description,price=,quantity=)  so by doing the **product.model_dump()  so internally it becomes this "Products(id=,name=,description,price=,quantity=)" and by unpacking we are adding the data like this "Products(id=1,name=iphone,description=an iphone mobile,price=10,quantity=10)"
+            db.add(database_models.Product(**product.model_dump()))
+        db.commit()
+        db.close()
+
 init_db()
 
 @app.get("/products")
-def getallproducts():
-    #database connection 
-    db = session()
-    db.query()
-    return products
+def getallproducts(db:Session = Depends(get_db)):
+
+#     What does .all() do?
+   # db.query(Product).all()
+ # means:
+# Give me every row from the Product table.
+# SQLAlchemy generates SQL similar to:
+# SELECT *
+# FROM product;
+# and sends it to the database.
+    # means db.query(database_models.Product) wht it means is that query the product table in the databse but in python we have mention the database_model.Product
+    database_products = db.query(database_models.Product).order_by(database_models.Product.id).all()
+    return database_products
 
 @app.get("/product/{id}")
-def get_product_by_id(id:int):
-    for product in products:
-        if product.id == id:
-            return product
-      
+def get_product_by_id(id:int,db:Session= Depends(get_db)):
+    #filter is used as where clause in this
+                        #table name/model that convert after
+                            #  |                        
+                            #  v                            WHERE Id == the id comes when 
+                            #                                   the user passes any id
+                               #                                id of the product table
+                               # so the query becomes
+                               # SELECT * FROM PRODUCT WHERE ID = 1
+                               #                  this id is of product table as product.id 
+                               #                                                  and this first means Fetch me the first relevant id
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first() 
+    if db_product:
+        return db_product
     return {"message":"product not found"}
 
 @app.post("/product")
